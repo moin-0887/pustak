@@ -1,12 +1,26 @@
 
+import { BookOpen } from 'lucide-react';
+
 const Footer = () => {
   return (
-    <footer className="border-t">
-      <div className="container flex flex-col items-center justify-center gap-4 py-10 md:h-24 md:flex-row md:py-0">
-        <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-          <p className="text-center text-sm leading-loose md:text-left">
-            Built by your friends at Lovable.
-          </p>
+    <footer className="border-t bg-muted/50">
+      <div className="container py-10">
+        <div className="flex flex-col items-center text-center space-y-6">
+          {/* Logo and Brand */}
+          <div className="flex items-center space-x-2">
+            <BookOpen className="h-8 w-8 text-primary" />
+            <h2 className="text-2xl font-bold">Pustak</h2>
+          </div>
+          
+          {/* Copyright and Mission */}
+          <div className="space-y-2 max-w-md">
+            <p className="text-sm text-muted-foreground">
+              © 2025 Pustak. A movement to bring back the joy of reading.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Inspired by Sant Shiromani Ravidas, Global Skills Park, Bhopal, Madhya Pradesh.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

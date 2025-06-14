@@ -1,6 +1,6 @@
 
 import { Link, NavLink } from 'react-router-dom';
-import { BookOpen, LogIn, LogOut, User, Library, Plus, MessageSquare, Clock } from 'lucide-react';
+import { BookOpen, LogIn, LogOut, User, Library, Plus, MessageSquare, Clock, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -145,6 +145,12 @@ const Header = () => {
                     </div>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="cursor-pointer">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      My Dashboard
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/my-books" className="cursor-pointer">
                       <Library className="mr-2 h-4 w-4" />
