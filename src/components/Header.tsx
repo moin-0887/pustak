@@ -1,6 +1,6 @@
 
 import { Link, NavLink } from 'react-router-dom';
-import { BookOpen, LogIn, LogOut, User, Library, LayoutDashboard, Plus } from 'lucide-react';
+import { BookOpen, LogIn, LogOut, User, Library, LayoutDashboard, Plus, MessageSquare, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -11,6 +11,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
 
 const Header = () => {
   const { user, signOut } = useAuth();
@@ -29,25 +37,103 @@ const Header = () => {
           <BookOpen className="h-6 w-6 text-primary" />
           <span className="font-bold text-lg">Pustak</span>
         </Link>
-        <nav className="flex items-center space-x-6 text-sm font-medium">
+        
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           <NavLink to="/browse" className={navLinkClass}>
             Browse Books
           </NavLink>
           {user && (
             <>
               <NavLink to="/dashboard" className={navLinkClass}>
-                Dashboard
+                My Dashboard
               </NavLink>
               <NavLink to="/my-books" className={navLinkClass}>
                 My Books
               </NavLink>
+              <NavLink to="/requests" className={navLinkClass}>
+                Requests
+              </NavLink>
+              <NavLink to="/messages" className={navLinkClass}>
+                Messages
+              </NavLink>
             </>
           )}
         </nav>
+
+        {/* Mobile Navigation Menu */}
+        {user && (
+          <div className="md:hidden flex-1">
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="text-sm">Menu</NavigationMenuTrigger>
+                  <NavigationMenuContent className="bg-background">
+                    <div className="grid gap-3 p-4 w-[200px]">
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/browse"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none">Browse Books</div>
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/dashboard"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none flex items-center">
+                            <LayoutDashboard className="mr-2 h-4 w-4" />
+                            My Dashboard
+                          </div>
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/my-books"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none flex items-center">
+                            <Library className="mr-2 h-4 w-4" />
+                            My Books
+                          </div>
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/requests"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none flex items-center">
+                            <Clock className="mr-2 h-4 w-4" />
+                            Requests
+                          </div>
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/messages"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none flex items-center">
+                            <MessageSquare className="mr-2 h-4 w-4" />
+                            Messages
+                          </div>
+                        </Link>
+                      </NavigationMenuLink>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
+        )}
+
         <div className="flex flex-1 items-center justify-end space-x-4">
           {user ? (
             <>
-              <Button asChild variant="outline" size="sm">
+              <Button asChild variant="outline" size="sm" className="hidden sm:flex">
                 <Link to="/list-book">
                   <Plus className="h-4 w-4 mr-2" />
                   List Book
@@ -76,7 +162,7 @@ const Header = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard" className="cursor-pointer">
                       <LayoutDashboard className="mr-2 h-4 w-4" />
-                      Dashboard
+                      My Dashboard
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -85,10 +171,22 @@ const Header = () => {
                       My Books
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="sm:hidden">
                     <Link to="/list-book" className="cursor-pointer">
                       <Plus className="mr-2 h-4 w-4" />
                       List a Book
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/requests" className="cursor-pointer">
+                      <Clock className="mr-2 h-4 w-4" />
+                      Requests
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/messages" className="cursor-pointer">
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      Messages
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />

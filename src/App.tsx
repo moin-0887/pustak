@@ -13,6 +13,8 @@ import AuthPage from "./pages/Auth";
 import MyBooksPage from "./pages/MyBooks";
 import Dashboard from "./pages/Dashboard";
 import ListBook from "./pages/ListBook";
+import Requests from "./pages/Requests";
+import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const App = () => (
               <Route path="/my-books" element={<MyBooksPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/list-book" element={<ListBook />} />
+              <Route path="/requests" element={<Requests />} />
+              <Route path="/messages" element={<Messages />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
