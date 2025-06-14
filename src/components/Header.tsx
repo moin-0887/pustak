@@ -1,6 +1,6 @@
 
 import { Link, NavLink } from 'react-router-dom';
-import { BookOpen, LogIn, LogOut, User, Library, LayoutDashboard, Plus, MessageSquare, Clock } from 'lucide-react';
+import { BookOpen, LogIn, LogOut, User, Library, Plus, MessageSquare, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -45,9 +45,6 @@ const Header = () => {
           </NavLink>
           {user && (
             <>
-              <NavLink to="/dashboard" className={navLinkClass}>
-                My Dashboard
-              </NavLink>
               <NavLink to="/my-books" className={navLinkClass}>
                 My Books
               </NavLink>
@@ -76,17 +73,6 @@ const Header = () => {
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           <div className="text-sm font-medium leading-none">Browse Books</div>
-                        </Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          to="/dashboard"
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        >
-                          <div className="text-sm font-medium leading-none flex items-center">
-                            <LayoutDashboard className="mr-2 h-4 w-4" />
-                            My Dashboard
-                          </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
@@ -159,12 +145,6 @@ const Header = () => {
                     </div>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      My Dashboard
-                    </Link>
-                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/my-books" className="cursor-pointer">
                       <Library className="mr-2 h-4 w-4" />
