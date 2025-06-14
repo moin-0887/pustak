@@ -1,4 +1,3 @@
-
 import { Link, NavLink } from 'react-router-dom';
 import { BookOpen, LogIn, LogOut, User, Library, Plus, MessageSquare, Clock, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -38,27 +37,25 @@ const Header = () => {
           <span className="font-bold text-lg">Pustak</span>
         </Link>
         
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-          <NavLink to="/browse" className={navLinkClass}>
-            Browse Books
-          </NavLink>
-          {user && (
-            <>
-              <NavLink to="/my-books" className={navLinkClass}>
-                My Books
-              </NavLink>
-              <NavLink to="/requests" className={navLinkClass}>
-                Requests
-              </NavLink>
-              <NavLink to="/messages" className={navLinkClass}>
-                Messages
-              </NavLink>
-            </>
-          )}
-        </nav>
+        {/* Desktop Navigation - Only show for logged in users */}
+        {user && (
+          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+            <NavLink to="/browse" className={navLinkClass}>
+              Browse Books
+            </NavLink>
+            <NavLink to="/my-books" className={navLinkClass}>
+              My Books
+            </NavLink>
+            <NavLink to="/requests" className={navLinkClass}>
+              Requests
+            </NavLink>
+            <NavLink to="/messages" className={navLinkClass}>
+              Messages
+            </NavLink>
+          </nav>
+        )}
 
-        {/* Mobile Navigation Menu */}
+        {/* Mobile Navigation Menu - Only show for logged in users */}
         {user && (
           <div className="md:hidden flex-1">
             <NavigationMenu>
