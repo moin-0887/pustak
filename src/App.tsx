@@ -11,6 +11,8 @@ import BrowsePage from "./pages/Browse";
 import BookDetailPage from "./pages/BookDetail";
 import AuthPage from "./pages/Auth";
 import MyBooksPage from "./pages/MyBooks";
+import Dashboard from "./pages/Dashboard";
+import ListBook from "./pages/ListBook";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
               <Route path="/book/:id" element={<BookDetailPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/my-books" element={<MyBooksPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/list-book" element={<ListBook />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

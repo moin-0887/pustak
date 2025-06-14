@@ -54,6 +54,60 @@ export type Database = {
         }
         Relationships: []
       }
+      listed_books: {
+        Row: {
+          author: string
+          condition: string
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          genre: string | null
+          id: string
+          is_available: boolean
+          isbn: string | null
+          max_rental_duration: number | null
+          price_per_day: number
+          publication_year: number | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          author: string
+          condition?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          genre?: string | null
+          id?: string
+          is_available?: boolean
+          isbn?: string | null
+          max_rental_duration?: number | null
+          price_per_day?: number
+          publication_year?: number | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          author?: string
+          condition?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          genre?: string | null
+          id?: string
+          is_available?: boolean
+          isbn?: string | null
+          max_rental_duration?: number | null
+          price_per_day?: number
+          publication_year?: number | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -81,13 +135,65 @@ export type Database = {
         }
         Relationships: []
       }
-      rentals: {
+      rental_requests: {
         Row: {
           book_id: string
           created_at: string
+          id: string
+          message: string | null
+          owner_id: string
+          requested_end_date: string
+          requested_start_date: string
+          requester_id: string
+          status: string
+          total_cost: number
+          updated_at: string
+        }
+        Insert: {
+          book_id: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          owner_id: string
+          requested_end_date: string
+          requested_start_date: string
+          requester_id: string
+          status?: string
+          total_cost?: number
+          updated_at?: string
+        }
+        Update: {
+          book_id?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          owner_id?: string
+          requested_end_date?: string
+          requested_start_date?: string
+          requester_id?: string
+          status?: string
+          total_cost?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rental_requests_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "listed_books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rentals: {
+        Row: {
+          book_id: string | null
+          created_at: string
           due_date: string
           id: string
+          listed_book_id: string | null
           rental_date: string
+          rental_request_id: string | null
           return_date: string | null
           status: string
           total_cost: number
@@ -95,11 +201,13 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          book_id: string
+          book_id?: string | null
           created_at?: string
           due_date: string
           id?: string
+          listed_book_id?: string | null
           rental_date?: string
+          rental_request_id?: string | null
           return_date?: string | null
           status?: string
           total_cost?: number
@@ -107,11 +215,13 @@ export type Database = {
           user_id: string
         }
         Update: {
-          book_id?: string
+          book_id?: string | null
           created_at?: string
           due_date?: string
           id?: string
+          listed_book_id?: string | null
           rental_date?: string
+          rental_request_id?: string | null
           return_date?: string | null
           status?: string
           total_cost?: number
@@ -124,6 +234,20 @@ export type Database = {
             columns: ["book_id"]
             isOneToOne: false
             referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rentals_listed_book_id_fkey"
+            columns: ["listed_book_id"]
+            isOneToOne: false
+            referencedRelation: "listed_books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rentals_rental_request_id_fkey"
+            columns: ["rental_request_id"]
+            isOneToOne: false
+            referencedRelation: "rental_requests"
             referencedColumns: ["id"]
           },
         ]
