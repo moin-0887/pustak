@@ -3,10 +3,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MessageSquare, User } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useQueryClient } from '@tanstack/react-query';
+import { Calendar, User, MessageSquare, DollarSign } from 'lucide-react';
 
 interface RentalRequest {
   id: string;
@@ -30,46 +30,38 @@ const RentalRequestCard = ({ request }: RentalRequestCardProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const handleStatusUpdate = async (status: 'approved' | 'rejected') => {
-    try {
+  const updateRequestMutation = useMutation({
+    mutationFn: async (status: string) => {
       const { error } = await supabase
         .from('rental_requests')
-        .update({ status })
+        .update({ status, updated_at: new Date().toISOString() })
         .eq('id', request.id);
 
       if (error) throw error;
-
-      // If approved, create a rental record
-      if (status === 'approved') {
-        const { error: rentalError } = await supabase
-          .from('rentals')
-          .insert({
-            user_id: request.requester_id,
-            rental_request_id: request.id,
-            rental_date: request.requested_start_date,
-            due_date: request.requested_end_date,
-            total_cost: request.total_cost,
-            status: 'active'
-          });
-
-        if (rentalError) throw rentalError;
-      }
-
+    },
+    onSuccess: (_, status) => {
       toast({
-        title: "Success",
-        description: `Request ${status} successfully!`,
+        title: status === 'approved' ? "Request Approved!" : "Request Rejected",
+        description: `The rental request has been ${status}.`,
       });
-
-      // Refresh the data
       queryClient.invalidateQueries({ queryKey: ['rentalRequests'] });
-    } catch (error) {
-      console.error('Error updating request:', error);
+    },
+    onError: (error) => {
+      console.error('Error updating rental request:', error);
       toast({
         title: "Error",
-        description: "Failed to update request",
+        description: "Failed to update the rental request. Please try again.",
         variant: "destructive",
       });
-    }
+    },
+  });
+
+  const handleApprove = () => {
+    updateRequestMutation.mutate('approved');
+  };
+
+  const handleReject = () => {
+    updateRequestMutation.mutate('rejected');
   };
 
   const getStatusColor = (status: string) => {
@@ -77,8 +69,13 @@ const RentalRequestCard = ({ request }: RentalRequestCardProps) => {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
       case 'approved': return 'bg-green-100 text-green-800';
       case 'rejected': return 'bg-red-100 text-red-800';
+      case 'cancelled': return 'bg-gray-100 text-gray-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
   };
 
   const calculateDays = () => {
@@ -100,63 +97,70 @@ const RentalRequestCard = ({ request }: RentalRequestCardProps) => {
           </Badge>
         </div>
       </CardHeader>
+      
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center space-x-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-sm font-medium">Start Date</p>
-              <p className="text-sm text-muted-foreground">
-                {new Date(request.requested_start_date).toLocaleDateString()}
-              </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <div className="flex items-center text-sm">
+              <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+              <div>
+                <p className="font-medium">Rental Period</p>
+                <p className="text-muted-foreground">
+                  {formatDate(request.requested_start_date)} - {formatDate(request.requested_end_date)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  ({calculateDays()} days)
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-sm font-medium">End Date</p>
-              <p className="text-sm text-muted-foreground">
-                {new Date(request.requested_end_date).toLocaleDateString()}
-              </p>
-            </div>
-          </div>
-          <div>
-            <p className="text-sm font-medium">Duration</p>
-            <p className="text-sm text-muted-foreground">{calculateDays()} days</p>
-          </div>
-        </div>
 
-        <div>
-          <p className="text-lg font-bold text-primary">Total: ₹{request.total_cost}</p>
-        </div>
-
-        {request.message && (
-          <div className="flex items-start space-x-2">
-            <MessageSquare className="h-4 w-4 text-muted-foreground mt-1" />
-            <div>
-              <p className="text-sm font-medium">Message from requester:</p>
-              <p className="text-sm text-muted-foreground">{request.message}</p>
+            <div className="flex items-center text-sm">
+              <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
+              <div>
+                <p className="font-medium">Total Cost</p>
+                <p className="text-lg font-bold text-primary">₹{request.total_cost}</p>
+              </div>
             </div>
           </div>
-        )}
+
+          {request.message && (
+            <div className="space-y-2">
+              <div className="flex items-start text-sm">
+                <MessageSquare className="h-4 w-4 mr-2 text-muted-foreground mt-0.5" />
+                <div>
+                  <p className="font-medium">Message from requester</p>
+                  <p className="text-muted-foreground bg-muted p-2 rounded text-sm mt-1">
+                    {request.message}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
         {request.status === 'pending' && (
-          <div className="flex space-x-2">
+          <div className="flex gap-2 pt-2">
             <Button 
-              onClick={() => handleStatusUpdate('approved')}
-              size="sm"
+              onClick={handleApprove}
+              disabled={updateRequestMutation.isPending}
               className="flex-1"
             >
               Approve
             </Button>
             <Button 
-              onClick={() => handleStatusUpdate('rejected')}
               variant="outline"
-              size="sm"
+              onClick={handleReject}
+              disabled={updateRequestMutation.isPending}
               className="flex-1"
             >
               Reject
             </Button>
+          </div>
+        )}
+
+        {request.status !== 'pending' && (
+          <div className="pt-2 text-sm text-muted-foreground">
+            Request {request.status} • No further action needed
           </div>
         )}
       </CardContent>
