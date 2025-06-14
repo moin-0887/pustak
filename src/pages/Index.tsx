@@ -6,8 +6,11 @@ import SearchBar from "@/components/SearchBar";
 import RecentlyAddedBooks from "@/components/RecentlyAddedBooks";
 import FeedbackForm from "@/components/FeedbackForm";
 import ContactForm from "@/components/ContactForm";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { user } = useAuth();
+
   return (
     <div className="space-y-16">
       {/* Hero Section with Search */}
@@ -25,12 +28,25 @@ const Index = () => {
             </p>
             <SearchBar />
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg">
-                <Link to="/browse">Browse All Books</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/about">Learn More</Link>
-              </Button>
+              {user ? (
+                <>
+                  <Button asChild size="lg">
+                    <Link to="/browse">Browse All Books</Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline">
+                    <Link to="/about">Learn More</Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button asChild size="lg">
+                    <Link to="/about">About Pustak</Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline">
+                    <Link to="/auth">Get Started</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
