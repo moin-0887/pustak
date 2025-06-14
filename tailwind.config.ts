@@ -21,8 +21,8 @@ export default {
 		},
 		extend: {
       fontFamily: {
-        sans: ["Poppins", ...fontFamily.sans],
-        serif: ["Lora", ...fontFamily.serif],
+        sans: ["Inter", ...fontFamily.sans],
+        serif: ["Playfair Display", ...fontFamily.serif],
       },
 			colors: {
 				border: 'hsl(var(--border))',
