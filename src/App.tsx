@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
+import About from "./pages/About";
 import BrowsePage from "./pages/Browse";
 import BookDetailPage from "./pages/BookDetail";
 import AuthPage from "./pages/Auth";
@@ -29,6 +30,7 @@ const App = () => (
           <Layout>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
               <Route path="/browse" element={<BrowsePage />} />
               <Route path="/book/:id" element={<BookDetailPage />} />
               <Route path="/auth" element={<AuthPage />} />
