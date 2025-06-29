@@ -8,22 +8,39 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { BookOpen } from 'lucide-react';
 
+/**
+ * Authentication Page Component
+ * Handles both sign-in and sign-up functionality in a single form
+ * Automatically redirects authenticated users to homepage
+ * Uses Supabase authentication through AuthContext
+ */
 const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  // Form state management
+  const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [fullName, setFullName] = useState(''); // Only used for signup
   const [loading, setLoading] = useState(false);
+  
+  // Authentication context and navigation
   const { signIn, signUp, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  /**
+   * Redirect authenticated users to homepage
+   * Prevents authenticated users from accessing auth page
+   */
   useEffect(() => {
     if (user) {
       navigate('/');
     }
   }, [user, navigate]);
 
+  /**
+   * Handles form submission for both login and signup
+   * Shows appropriate success/error messages via toast notifications
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -31,11 +48,14 @@ const AuthPage = () => {
     try {
       let result;
       if (isLogin) {
+        // Handle user sign-in
         result = await signIn(email, password);
       } else {
+        // Handle user sign-up with full name
         result = await signUp(email, password, fullName);
       }
 
+      // Handle authentication result
       if (result.error) {
         toast({
           title: "Error",
@@ -43,10 +63,13 @@ const AuthPage = () => {
           variant: "destructive",
         });
       } else {
+        // Show success message
         toast({
           title: "Success",
           description: isLogin ? "Welcome back!" : "Account created successfully!",
         });
+        
+        // Additional message for new user registration
         if (!isLogin) {
           toast({
             title: "Check your email",
@@ -55,6 +78,7 @@ const AuthPage = () => {
         }
       }
     } catch (error) {
+      // Handle unexpected errors
       toast({
         title: "Error",
         description: "An unexpected error occurred",
@@ -68,6 +92,7 @@ const AuthPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
       <div className="w-full max-w-md">
+        {/* App branding header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2 text-2xl font-bold text-primary">
             <BookOpen className="h-8 w-8" />
@@ -76,6 +101,7 @@ const AuthPage = () => {
           <p className="text-muted-foreground mt-2">Your digital library companion</p>
         </div>
 
+        {/* Authentication form card */}
         <Card>
           <CardHeader>
             <CardTitle>{isLogin ? 'Welcome Back' : 'Create Account'}</CardTitle>
@@ -85,6 +111,7 @@ const AuthPage = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Full name field - only shown during signup */}
               {!isLogin && (
                 <div>
                   <label htmlFor="fullName" className="block text-sm font-medium mb-2">
@@ -99,6 +126,8 @@ const AuthPage = () => {
                   />
                 </div>
               )}
+              
+              {/* Email field - required for both login and signup */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-2">
                   Email
@@ -111,6 +140,8 @@ const AuthPage = () => {
                   required
                 />
               </div>
+              
+              {/* Password field - required for both login and signup */}
               <div>
                 <label htmlFor="password" className="block text-sm font-medium mb-2">
                   Password
@@ -123,11 +154,14 @@ const AuthPage = () => {
                   required
                 />
               </div>
+              
+              {/* Submit button with loading state */}
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
               </Button>
             </form>
 
+            {/* Toggle between login and signup */}
             <div className="mt-4 text-center">
               <button
                 type="button"

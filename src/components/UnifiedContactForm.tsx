@@ -9,26 +9,40 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+/**
+ * Unified Contact Form Component
+ * Combines contact form functionality with company information display
+ * Handles various types of inquiries through a categorized subject selection
+ */
 const UnifiedContactForm = () => {
+  // Form state management
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Toast notifications for user feedback
   const { toast } = useToast();
 
+  /**
+   * Handles form submission
+   * Currently simulates submission - in production would integrate with backend
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
+    // Simulate form submission delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
+    // Show success notification
     toast({
       title: "Message Sent!",
       description: "Thank you for reaching out. We'll get back to you soon.",
     });
 
+    // Reset form fields after successful submission
     setName('');
     setEmail('');
     setSubject('');
@@ -37,7 +51,9 @@ const UnifiedContactForm = () => {
   };
 
   return (
+    {/* Two-column layout: contact form on left, company info on right */}
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+      {/* Contact Form Card */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -47,6 +63,7 @@ const UnifiedContactForm = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name and Email fields in a row on larger screens */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="contact-name">Name</Label>
@@ -70,6 +87,8 @@ const UnifiedContactForm = () => {
                 />
               </div>
             </div>
+            
+            {/* Subject selection dropdown */}
             <div className="space-y-2">
               <Label htmlFor="subject">Subject</Label>
               <Select value={subject} onValueChange={setSubject}>
@@ -85,6 +104,8 @@ const UnifiedContactForm = () => {
                 </SelectContent>
               </Select>
             </div>
+            
+            {/* Message textarea */}
             <div className="space-y-2">
               <Label htmlFor="contact-message">Message</Label>
               <Textarea
@@ -96,6 +117,8 @@ const UnifiedContactForm = () => {
                 required
               />
             </div>
+            
+            {/* Submit button with loading state */}
             <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? 'Sending...' : 'Send Message'}
             </Button>
@@ -103,12 +126,15 @@ const UnifiedContactForm = () => {
         </CardContent>
       </Card>
 
+      {/* Company Information Section */}
       <div className="space-y-6">
+        {/* Contact Information Card */}
         <Card>
           <CardHeader>
             <CardTitle>Contact Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Physical Address */}
             <div className="flex items-center gap-3">
               <MapPin className="h-5 w-5 text-primary" />
               <div>
@@ -119,6 +145,8 @@ const UnifiedContactForm = () => {
                 </p>
               </div>
             </div>
+            
+            {/* Email Contact */}
             <div className="flex items-center gap-3">
               <Mail className="h-5 w-5 text-primary" />
               <div>
@@ -126,6 +154,8 @@ const UnifiedContactForm = () => {
                 <p className="text-sm text-muted-foreground">contact@pustak.in</p>
               </div>
             </div>
+            
+            {/* Phone Contact */}
             <div className="flex items-center gap-3">
               <Phone className="h-5 w-5 text-primary" />
               <div>
@@ -136,6 +166,7 @@ const UnifiedContactForm = () => {
           </CardContent>
         </Card>
 
+        {/* Mission Statement Card */}
         <Card>
           <CardHeader>
             <CardTitle>Our Mission</CardTitle>
