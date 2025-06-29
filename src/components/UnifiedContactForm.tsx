@@ -51,7 +51,6 @@ const UnifiedContactForm = () => {
   };
 
   return (
-    {/* Two-column layout: contact form on left, company info on right */}
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
       {/* Contact Form Card */}
       <Card>
