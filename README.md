@@ -1,5 +1,9 @@
 ## Project info
 
+**URL**: https://pustak.lovable.app
+
+**Git URL**: https://github.com/moin-0887/pustak.git
+
 **Use your preferred IDE**
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
@@ -46,4 +50,4 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-Made by Team CodeX using Lovable.
+Made with Love By Team CodeX ❤
